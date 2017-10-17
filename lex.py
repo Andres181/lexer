@@ -1,13 +1,13 @@
-import lexer as lex
+import ply.lex as lex
 
 tokens = [ 'NAME','NUMBER','PLUS','MINUS','TIMES','DIVIDE', 'EQUALS' ]
 
-t_ignore = ' \t'
+t_ignore = ' \t \n'
 t_PLUS = r'\+'
 t_MINUS = r'-'
 t_TIMES = r'\*'
 t_DIVIDE = r'/'
-t_EQUALS = r':='
+t_EQUALS = r'='
 t_NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
 
 def t_NUMBER(t):
@@ -17,19 +17,16 @@ def t_NUMBER(t):
 
 # Error handling rule
 def t_error(t):
-    print("valor no valido '%s'" % t.value[0])
+    print("Caracter no valido '%s'" % t.value[0])
     t.lexer.skip(1)
 
+lex.lex() # Build the lexer
+
 archivo = open("expresiones.txt", "r")
-for linea in archivo.readlines():
-    lista = linea.split(" ")
-    print lista
 
-    lex.lex(tokens, lista) # Build the lexer
+lex.input(archivo.read())
 
-    lex.input(lista)
-    while True:
-        tok = lex.token()
-        if not tok: break
-        print str(tok.value) + " - " + str(tok.type)
-
+while True:
+    tok = lex.token()
+    if not tok: break
+    print str(tok.value) + " - " + str(tok.type)
